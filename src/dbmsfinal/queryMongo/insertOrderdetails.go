@@ -8,17 +8,6 @@ import (
 	mgo "gopkg.in/mgo.v2"
 )
 
-type ODetail struct {
-	CarID         int64 `bson:"car_id" json:"car_id"`
-	QuantityOrder int64 `bson:"quantity_order" json:"quantity_order"`
-}
-
-type Orderdetail struct {
-	//ID      bson.ObjectId `bson:"_id" json:"_id, omitempty"`
-	OrderID int64      `bson:"order_id" json:"order_id"`
-	Details []*ODetail `bson:"details" json:"details"`
-}
-
 func getAllOrderdetails() []*Orderdetail {
 	orderdetailsFile, err := os.Open("orderwithdetails.json")
 	if err != nil {
@@ -72,4 +61,3 @@ func insertOrderdetailsBulk() {
 		panic(err)
 	}
 }
-

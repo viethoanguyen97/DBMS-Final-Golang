@@ -9,4 +9,3 @@ func TestInsertCustomersRowByRow(t *testing.T) {
 func TestInsertCustomersBulk(t *testing.T) {
 	//insertCustomersBulk()
 }
-

@@ -9,4 +9,3 @@ func TestInsertOrderdetailsRowByRow(t *testing.T) {
 func TestInsertOrderdetailssBulk(t *testing.T) {
 	//insertOrderdetailsBulk()
 }
-

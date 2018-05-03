@@ -6,11 +6,6 @@ import (
 	gocsv "github.com/gocarina/gocsv"
 )
 
-type Order struct {
-	OrderID    int64 `csv:"order_id"`
-	CustomerID int64 `csv:"customer_id"`
-}
-
 func getAllOrders() []*Order {
 	ordersFile, err := os.OpenFile("orders.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
@@ -56,4 +51,3 @@ func insertOrdersBulk() {
 		panic(err)
 	}
 }
-

@@ -3,9 +3,9 @@ package queryMySQL
 import "testing"
 
 func TestInsertOrderRowByRow(t *testing.T) {
-	//	insertOrdersRowByRow()
+	//insertOrdersRowByRow()
 }
 
 func TestInsertOrdersBulk(t *testing.T) {
-	//	insertOrdersBulk()
+	//insertOrdersBulk()
 }

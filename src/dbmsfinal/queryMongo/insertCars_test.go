@@ -9,4 +9,3 @@ func TestInsertCarsRowByRow(t *testing.T) {
 func TestInsertCarsBulk(t *testing.T) {
 	//insertCarsBulk()
 }
-

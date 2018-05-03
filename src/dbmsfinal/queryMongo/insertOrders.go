@@ -9,12 +9,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type Order struct {
-	ID         bson.ObjectId `bson:"_id" json:"_id, omitempty"`
-	OrderID    int64         `bson:"order_id" json:"order_id"`
-	CustomerID int64         `bson:"customer_id" json:"customer_id"`
-}
-
 func getAllOrders() []*Order {
 	ordersFile, err := os.Open("orders.json")
 	if err != nil {
@@ -68,4 +62,3 @@ func insertOrdersBulk() {
 		panic(err)
 	}
 }
-

@@ -6,13 +6,6 @@ import (
 	gocsv "github.com/gocarina/gocsv"
 )
 
-type Car struct {
-	CarID        int64  `csv:"car_id"`
-	CarModel     string `csv:"car_model"`
-	CarMake      string `csv:"car_make"`
-	CarModelYear int    `csv:"car_model_year"`
-}
-
 func getAllCars() []*Car {
 	carsFile, err := os.OpenFile("cars.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
@@ -59,4 +52,3 @@ func insertCarsBulk() {
 		panic(err)
 	}
 }
-

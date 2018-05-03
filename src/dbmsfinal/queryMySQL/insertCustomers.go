@@ -6,13 +6,6 @@ import (
 	gocsv "github.com/gocarina/gocsv"
 )
 
-type Customer struct {
-	CustomerID      int64  `csv:"customer_id"`
-	CustomerName    string `csv:"customer_name"`
-	CustomerEmail   string `csv:"customer_email"`
-	CustomerAddress string `csv:"customer_address"`
-}
-
 func getAllCustomers() []*Customer {
 	customersFile, err := os.OpenFile("customers.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
@@ -58,4 +51,3 @@ func insertCustomersBulk() {
 		panic(err)
 	}
 }
-
