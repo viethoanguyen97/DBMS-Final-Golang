@@ -14,9 +14,10 @@ type Orderdetail struct {
 }
 
 type OrderdetailCSV struct {
-	OrderID       int64 `bson:"order_id" csv:"order_id" json:"order_id"`
-	CarID         int64 `bson:"car_id" csv:"car_id" json:"car_id"`
-	QuantityOrder int64 `bson:"quantity_order" csv:"quantity_order" json:"quantity_order"`
+	ID            bson.ObjectId `bson:"_id" json:"_id, omitempty"`
+	OrderID       int64         `bson:"order_id" csv:"order_id" json:"order_id"`
+	CarID         int64         `bson:"car_id" csv:"car_id" json:"car_id"`
+	QuantityOrder int64         `bson:"quantity_order" csv:"quantity_order" json:"quantity_order"`
 }
 
 type OrderDetail struct {

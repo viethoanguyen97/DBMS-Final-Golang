@@ -55,7 +55,7 @@ func insertCarsRowByRow() int64 {
 	daoMongoDB.Session.SetMode(mgo.Monotonic, true)
 
 	start := time.Now()
-	c := daoMongoDB.Session.DB("DBMS-Final").C("Cars")
+	c := daoMongoDB.Session.DB("DBMSFinal").C("Cars")
 	//c.RemoveAll(nil)
 
 	for _, car := range cars {
@@ -76,7 +76,7 @@ func insertCarsBulk() int64 {
 	cars := getAllCarsCSV()
 
 	start := time.Now()
-	c := daoMongoDB.Session.DB("DBMS-Final").C("Cars")
+	c := daoMongoDB.Session.DB("DBMSFinal").C("Cars")
 	//c.RemoveAll(nil)
 	bulk := c.Bulk()
 

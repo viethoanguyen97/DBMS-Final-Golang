@@ -115,3 +115,48 @@ func (r *OrderdetailsDAO) GetOrderCardetailsOfCustomerID(customer_id int64) ([]*
 
 	return ordercardetails, elapsed, nil
 }
+
+func (r *OrderdetailsDAO) InsertNewOrderdetail(insertOrderdetailsData *dataMySQL.OrderdetailData) (*dataMySQL.OrderdetailData, int64, error) {
+	orderID := insertOrderdetailsData.OrderID
+	carID := insertOrderdetailsData.CarID
+	quantityOrder := insertOrderdetailsData.QuantityOrder
+
+	start := time.Now()
+
+	queryRequests, err1 := DB.Prepare("insert into Orderdetails(order_id, car_id, quantity_order) values (?, ?, ?);")
+	///add vao bang orderdetais
+	if err1 != nil {
+		fmt.Println(err1.Error())
+		return nil, int64(-1), errors.New("Fail to add new orderdetail")
+	}
+
+	_, err1 = queryRequests.Exec(orderID, carID, quantityOrder)
+
+	elapsed := time.Since(start).Nanoseconds()
+
+	if err1 != nil {
+		fmt.Println(err1.Error())
+		return nil, elapsed, errors.New("Fail to add new orderdetail")
+	}
+
+	return insertOrderdetailsData, elapsed, nil
+}
+
+func (r *OrderdetailsDAO) DeleteOrderdetail(order_id int64, car_id int64) (int64, error) { //TODO: DeleteOrderdetail
+	start := time.Now()
+
+	query, err := DB.Prepare("delete from Orderdetails where order_id= ? and car_id= ?;")
+	if err != nil {
+		fmt.Println(err.Error())
+		return int64(-1), errors.New("Fail to delete Orderdetail")
+	}
+	_, err = query.Exec(order_id, car_id)
+	if err != nil {
+		fmt.Println(err.Error())
+		return int64(-1), errors.New("Fail to delete Orderdetail")
+	}
+
+	elapsed := time.Since(start).Nanoseconds()
+
+	return elapsed, nil
+}

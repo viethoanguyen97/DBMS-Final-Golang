@@ -14,3 +14,9 @@ type OrderCarDetail struct {
 	CarModel      string `json:"car_model"`
 	QuantityOrder int64  `json:"quantity_order"`
 }
+
+type OrderdetailData struct {
+	OrderID       int64 `json:"order_id, omitempty" `
+	CarID         int64 `json:"car_id" `
+	QuantityOrder int64 `json:"quantity_order"`
+}

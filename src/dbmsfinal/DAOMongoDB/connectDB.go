@@ -21,7 +21,7 @@ var Session *mgo.Session
 
 func init() {
 	var err error
-	Session, err = mgo.Dial("mongodb://127.0.0.1:27017/DBMS-Final")
+	Session, err = mgo.Dial("mongodb://127.0.0.1:27017/DBMSFinal")
 
 	if err != nil {
 		panic(err)
@@ -32,6 +32,6 @@ func init() {
 
 }
 
-func closeDB() {
+func CloseDB() {
 	Session.Close()
 }

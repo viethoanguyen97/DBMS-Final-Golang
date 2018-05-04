@@ -2,6 +2,7 @@ package queryMongo
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"time"
@@ -34,7 +35,7 @@ func getAllOrderdetails() []*dataMongoDB.Orderdetail {
 }
 
 func getAllOrderdetailsCSV() []*dataMongoDB.Orderdetail {
-	orderdetailsFile, err := os.OpenFile("orderdetails.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	orderdetailsFile, err := os.OpenFile("orderdetails_final.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
@@ -85,13 +86,31 @@ func getAllOrderdetailsCSV() []*dataMongoDB.Orderdetail {
 	return orderdetails
 }
 
-func insertOrderdetailsRowByRow() int64 {
+func getAllOrderdetailsCSVOriginal() []*dataMongoDB.OrderdetailCSV {
+	orderdetailsFile, err := os.OpenFile("orderdetails_final.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	defer orderdetailsFile.Close()
+
+	orderdetailscsv := []*dataMongoDB.OrderdetailCSV{}
+
+	if err := gocsv.UnmarshalFile(orderdetailsFile, &orderdetailscsv); err != nil { // Load clients from file
+		panic(err)
+	}
+
+	return orderdetailscsv
+}
+
+func InsertOrderdetailsRowByRow() int64 {
 	//orderdetails := getAllOrderdetails()
-	orderdetails := getAllOrderdetailsCSV()
+	orderdetails := getAllOrderdetailsCSVOriginal()
+
+	fmt.Println("ok")
 	daoMongoDB.Session.SetMode(mgo.Monotonic, true)
 
 	start := time.Now()
-	c := daoMongoDB.Session.DB("DBMS-Final").C("Orderdetails")
+	c := daoMongoDB.Session.DB("DBMSFinal").C("Orderdetails")
 	//c.RemoveAll(nil)
 
 	for _, orderdetail := range orderdetails {
@@ -107,21 +126,34 @@ func insertOrderdetailsRowByRow() int64 {
 	return elapsed
 }
 
-func insertOrderdetailsBulk() int64 {
+func InsertOrderdetailsBulk() int64 {
 	//orderdetails := getAllOrderdetails()
-	orderdetails := getAllOrderdetailsCSV()
+	orderdetails := getAllOrderdetailsCSVOriginal()
 
+	fmt.Println("OK")
 	start := time.Now()
 
-	c := daoMongoDB.Session.DB("DBMS-Final").C("Orderdetails")
+	c := daoMongoDB.Session.DB("DBMSFinal").C("Orderdetails")
 	//c.RemoveAll(nil)
 	bulk := c.Bulk()
+	cnt := 0
 
 	for _, orderdetail := range orderdetails {
 		//fmt.Println(*car, bson.NewObjectId())
 		orderdetail.ID = bson.NewObjectId()
 		bulk.Insert(orderdetail)
+		if cnt == 100000 {
+			cnt = 0
+			_, err := bulk.Run()
+
+			if err != nil {
+				panic(err)
+			}
+
+			bulk = c.Bulk()
+		}
 	}
+
 	_, err := bulk.Run()
 
 	if err != nil {

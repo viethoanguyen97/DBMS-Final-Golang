@@ -18,3 +18,7 @@ func TestGetOrderCardetailsOfCustomerID(t *testing.T) {
 	//_, duration, _ := (*OrderdetailsDAO)(nil).GetOrderCardetailsOfCustomerID(150)
 	//fmt.Println(duration)
 }
+
+func TestInsertNewOrderdetails(t *testing.T) {
+
+}

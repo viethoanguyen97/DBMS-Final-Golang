@@ -5,11 +5,11 @@ import (
 )
 
 func TestInsertOrderRowByRow(t *testing.T) {
-	//duration := insertOrdersRowByRow()
+	//duration := InsertOrdersRowByRow()
 	//fmt.Println(duration)
 }
 
 func TestInsertOrdersBulk(t *testing.T) {
-	//duration := insertOrdersBulk()
+	//duration := InsertOrdersBulk()
 	//fmt.Println(duration)
 }

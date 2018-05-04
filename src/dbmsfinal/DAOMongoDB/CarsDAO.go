@@ -16,7 +16,7 @@ func (r *CarsDAO) GetCarInfo(car_id int64) (*dataMongoDB.Car, int64, error) {
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMS-Final").C("Cars").Find(bson.M{"car_id": car_id})
+	query := Session.DB("DBMSFinal").C("Cars").Find(bson.M{"car_id": car_id})
 	elapsed := time.Since(start).Nanoseconds()
 	//Measure time execution
 
@@ -35,7 +35,7 @@ func (r *CarsDAO) GetAllCarsInfo() ([]*dataMongoDB.Car, int64, error) {
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMS-Final").C("Cars").Find(bson.M{})
+	query := Session.DB("DBMSFinal").C("Cars").Find(bson.M{})
 	elapsed := time.Since(start).Nanoseconds()
 	//Measure time execution
 

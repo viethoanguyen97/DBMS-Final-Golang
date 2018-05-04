@@ -1,0 +1,139 @@
+package controllers
+
+import (
+	"fmt"
+	"net/http"
+	"strconv"
+
+	daoMySQL "dbmsfinal/DAOMySQL"
+	dataMySQL "dbmsfinal/dataMySQL"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+)
+
+type OrderdetailsController struct{}
+
+var OrderdetailsDAO *daoMySQL.OrderdetailsDAO
+
+func (e *OrderdetailsController) GetOrderdetailsOfOrderID(c *gin.Context) {
+	order_id, err := strconv.ParseInt(c.Param("order_id"), 10, 64)
+	OrderdetailsInfo, duration, err := OrderdetailsDAO.GetOrderdetailsOfOrderID(order_id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":        http.StatusNotFound,
+			"message":       err.Error(),
+			"data":          nil,
+			"duration_time": duration,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"message":  "Get Orderdetails's info successfully",
+		"data":     OrderdetailsInfo,
+		"duration": duration,
+	})
+}
+
+func (e *OrderdetailsController) GetOrderCardetailsOfOrderID(c *gin.Context) {
+	order_id, err := strconv.ParseInt(c.Param("order_id"), 10, 64)
+	Orderdetails, duration, err := OrderdetailsDAO.GetOrderCardetailsOfOrderID(order_id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"message":  "Get all Orderdetails info successfully",
+		"data":     Orderdetails,
+		"duration": duration,
+	})
+}
+
+func (e *OrderdetailsController) GetOrderCardetailsOfCustomerID(c *gin.Context) {
+	customer_id, err := strconv.ParseInt(c.Param("customer_id"), 10, 64)
+	Orderdetails, duration, err := OrderdetailsDAO.GetOrderCardetailsOfCustomerID(customer_id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"message":  "Get all Orderdetails info successfully",
+		"data":     Orderdetails,
+		"duration": duration,
+	})
+}
+
+func (r *OrderdetailsController) InsertNewOrderdetail(c *gin.Context) {
+	insertOrderdetailsData := &dataMySQL.OrderdetailData{}
+	err := c.BindJSON(insertOrderdetailsData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	_, duration, err := OrderdetailsDAO.InsertNewOrderdetail(insertOrderdetailsData)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"data":     nil,
+			"duration": duration,
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"message":  "insert new Orderdetails successfully!",
+		"data":     insertOrderdetailsData,
+		"duration": duration,
+	})
+}
+
+func (r *OrderdetailsController) DeleteOrderdetails(c *gin.Context) {
+	order_id, _ := strconv.ParseInt(c.Param("order_id"), 10, 64)
+	car_id, _ := strconv.ParseInt(c.Query("car_id"), 10, 64)
+
+	duration, err := OrderdetailsDAO.DeleteOrderdetail(order_id, car_id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"duration": duration,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"message":  "Delete Orderdetails successfully",
+		"duration": duration,
+	})
+}

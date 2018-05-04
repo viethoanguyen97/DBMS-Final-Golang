@@ -16,7 +16,7 @@ func (r *CustomersDAO) GetCustomerInfo(customer_id int64) (*dataMongoDB.Customer
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMS-Final").C("Customers").Find(bson.M{"customer_id": customer_id})
+	query := Session.DB("DBMSFinal").C("Customers").Find(bson.M{"customer_id": customer_id})
 	elapsed := time.Since(start).Nanoseconds()
 	//Measure time execution
 
@@ -35,7 +35,7 @@ func (r *CustomersDAO) GetAllCustomersInfo() ([]*dataMongoDB.Customer, int64, er
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMS-Final").C("Customers").Find(bson.M{})
+	query := Session.DB("DBMSFinal").C("Customers").Find(bson.M{})
 	elapsed := time.Since(start).Nanoseconds()
 	//Measure time execution
 

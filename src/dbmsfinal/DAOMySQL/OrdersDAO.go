@@ -8,9 +8,9 @@ import (
 	dataMySQL "dbmsfinal/dataMySQL"
 )
 
-type OrderDAO struct{}
+type OrdersDAO struct{}
 
-func (r *OrderDAO) GetOrderInfo(order_id int64) (*dataMySQL.Order, float64, error) {
+func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMySQL.Order, float64, error) {
 	orderInfo := &dataMySQL.Order{}
 
 	start := time.Now()
@@ -29,7 +29,7 @@ func (r *OrderDAO) GetOrderInfo(order_id int64) (*dataMySQL.Order, float64, erro
 	return orderInfo, elapsed, nil
 }
 
-func (r *OrderDAO) GetAllOrdersInfo() ([]*dataMySQL.Order, float64, error) {
+func (r *OrdersDAO) GetAllOrdersInfo() ([]*dataMySQL.Order, float64, error) {
 	orders := make([]*dataMySQL.Order, 0)
 
 	start := time.Now()
@@ -60,4 +60,26 @@ func (r *OrderDAO) GetAllOrdersInfo() ([]*dataMySQL.Order, float64, error) {
 	defer rows.Close()
 
 	return orders, elapsed, nil
+}
+
+func (r *OrdersDAO) EditOrder(orderID int64, editOrderData *dataMySQL.Order) (*dataMySQL.Order, int64, error) { //TODO: edit Order
+	customerID := editOrderData.CustomerID
+
+	start := time.Now()
+	//update requests table
+	query, err := DB.Prepare("update Order set customer_id= ? where order_id= ?;")
+	if err != nil {
+		return nil, int64(-1), errors.New("Fail to edit order info")
+	}
+	_, err = query.Exec(orderID, customerID)
+
+	elapsed := time.Since(start).Nanoseconds()
+
+	if err != nil {
+		return nil, elapsed, errors.New("Fail to edit order info")
+	}
+
+	editOrderData.OrderID = orderID
+
+	return editOrderData, elapsed, nil
 }
