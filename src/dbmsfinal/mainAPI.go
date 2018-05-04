@@ -46,28 +46,32 @@ func main() {
 	{
 		v1.GET("/customers/", MySQLCustomersController.GetAllCustomersInfo)
 		v1.GET("/customers/:customer_id", MySQLCustomersController.GetCustomerInfo)
-		v1.GET("/cars/", MySQLCarsController.GetCarInfo)
-		v1.GET("/cars/:car_id", MySQLCarsController.GetAllCarsInfo)
+		v1.GET("/cars/", MySQLCarsController.GetAllCarsInfo)
+		v1.GET("/cars/:car_id", MySQLCarsController.GetCarInfo)
 		v1.GET("/orders/", MySQLOrdersController.GetAllOrdersInfo)
-		v1.GET("/orders/:order_id", MySQLOrdersController.GetOrderInfo)
 		v1.GET("/orders/:order_id", MySQLOrdersController.GetOrderInfo)
 		v1.GET("/orders/:order_id/details", MySQLOrderdetailsController.GetOrderdetailsOfOrderID)
 		v1.GET("/orders/:order_id/cars", MySQLOrderdetailsController.GetOrderCardetailsOfOrderID)
 		v1.GET("/customers/:customer_id/orders", MySQLOrderdetailsController.GetOrderCardetailsOfCustomerID)
+		v1.PUT("/orders/:order_id", MySQLOrdersController.EditOrder)
+		v1.POST("/orderdetails", MySQLOrderdetailsController.InsertNewOrderdetail)
+		v1.DELETE("/orders/:order_id", MySQLOrderdetailsController.DeleteOrderdetails)
 	}
 
 	v2 := router.Group("/api/mongodb")
 	{
 		v2.GET("/customers/", MongoDBCustomersController.GetAllCustomersInfo)
 		v2.GET("/customers/:customer_id", MongoDBCustomersController.GetCustomerInfo)
-		v2.GET("/cars/", MongoDBCarsController.GetCarInfo)
-		v2.GET("/cars/:car_id", MongoDBCarsController.GetAllCarsInfo)
+		v2.GET("/cars/", MongoDBCarsController.GetAllCarsInfo)
+		v2.GET("/cars/:car_id", MongoDBCarsController.GetCarInfo)
 		v2.GET("/orders/", MongoDBOrdersController.GetAllOrdersInfo)
-		v2.GET("/orders/:order_id", MongoDBOrdersController.GetOrderInfo)
 		v2.GET("/orders/:order_id", MongoDBOrdersController.GetOrderInfo)
 		v2.GET("/orders/:order_id/details", MongoDBOrderdetailsController.GetOrderdetailsOfOrderID)
 		v2.GET("/orders/:order_id/cars", MongoDBOrderdetailsController.GetOrderCardetailsOfOrderID)
 		v2.GET("/customers/:customer_id/orders", MongoDBOrderdetailsController.GetOrderCardetailsOfCustomerID)
+		v2.PUT("/orders/:order_id", MongoDBOrdersController.EditOrder)
+		v2.POST("/orderdetails", MongoDBOrderdetailsController.InsertNewOrderdetail)
+		v2.DELETE("/orders/:order_id", MongoDBOrderdetailsController.DeleteOrderdetails)
 	}
 
 	/*config := cors.DefaultConfig()
