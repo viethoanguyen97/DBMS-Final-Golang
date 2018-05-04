@@ -39,7 +39,7 @@ func (e *CarsController) GetCarInfo(c *gin.Context) {
 }
 
 func (e *CarsController) GetAllCarsInfo(c *gin.Context) {
-	Cars, duration, err := CarsDAO.GetAllCarsInfo()
+	_, duration, err := CarsDAO.GetAllCarsInfo()
 
 	if err != nil {
 		fmt.Println(err)
@@ -52,9 +52,9 @@ func (e *CarsController) GetAllCarsInfo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"message":  "Get all Cars info successfully",
-		"data":     Cars,
+		"status":  http.StatusOK,
+		"message": "Get all Cars info successfully",
+		//"data":     Cars,
 		"duration": duration,
 	})
 }

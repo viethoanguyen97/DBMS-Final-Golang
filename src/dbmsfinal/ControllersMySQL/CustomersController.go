@@ -39,22 +39,22 @@ func (e *CustomersController) GetCustomerInfo(c *gin.Context) {
 }
 
 func (e *CustomersController) GetAllCustomersInfo(c *gin.Context) {
-	customers, duration, err := customersDAO.GetAllCustomersInfo()
+	_, duration, err := customersDAO.GetAllCustomersInfo()
 
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": err.Error(),
-			"data":    nil,
+			//"data":    nil,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"message":  "Get all Customers info successfully",
-		"data":     customers,
+		"status":  http.StatusOK,
+		"message": "Get all Customers info successfully",
+		//"data":     customers,
 		"duration": duration,
 	})
 }

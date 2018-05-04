@@ -17,7 +17,7 @@ type OrdersController struct{}
 var OrdersDAO *daoMongoDB.OrdersDAO
 
 func (e *OrdersController) GetOrderInfo(c *gin.Context) {
-	Order_id, err := strconv.ParseInt(c.Param("Order_id"), 10, 64)
+	Order_id, err := strconv.ParseInt(c.Param("order_id"), 10, 64)
 	OrderInfo, duration, err := OrdersDAO.GetOrderInfo(Order_id)
 
 	if err != nil {
@@ -40,7 +40,7 @@ func (e *OrdersController) GetOrderInfo(c *gin.Context) {
 }
 
 func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
-	Orders, duration, err := OrdersDAO.GetAllOrdersInfo()
+	_, duration, err := OrdersDAO.GetAllOrdersInfo()
 
 	if err != nil {
 		fmt.Println(err)
@@ -53,9 +53,9 @@ func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"message":  "Get all Orders info successfully",
-		"data":     Orders,
+		"status":  http.StatusOK,
+		"message": "Get all Orders info successfully",
+		//"data":     Orders,
 		"duration": duration,
 	})
 }

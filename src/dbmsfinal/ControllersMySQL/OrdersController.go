@@ -40,7 +40,7 @@ func (e *OrdersController) GetOrderInfo(c *gin.Context) {
 }
 
 func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
-	Orders, duration, err := OrdersDAO.GetAllOrdersInfo()
+	_, duration, err := OrdersDAO.GetAllOrdersInfo()
 
 	if err != nil {
 		fmt.Println(err)
@@ -53,9 +53,9 @@ func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"message":  "Get all Orders info successfully",
-		"data":     Orders,
+		"status":  http.StatusOK,
+		"message": "Get all Orders info successfully",
+		//"data":     Orders,
 		"duration": duration,
 	})
 }
