@@ -27,21 +27,26 @@ func (r *CarsDAO) GetCarInfo(car_id int64) (*dataMySQL.Car, float64, error) {
 	return carInfo, elapsed, nil
 }
 
-func (r *CarsDAO) GetAllCarsInfo() ([]*dataMySQL.Car, float64, error) {
+func (r *CarsDAO) GetAllCarsInfo() (int64, float64, error) { //([]*dataMySQL.Car, float64, error) {
 	start := time.Now()
 
-	cars := make([]*dataMySQL.Car, 0)
+	//	cars := make([]*dataMySQL.Car, 0)
 
-	rows, err := DB.Query("SELECT car_id, car_model, car_make, car_model_year FROM Cars")
+	//rows, err := DB.Query("SELECT car_id, car_model, car_make, car_model_year FROM Cars")
+	row := DB.QueryRow("SELECT count(*) FROM Cars")
 
 	elapsed := time.Since(start).Seconds()
 
+	var cnt int64
+	err := row.Scan(&cnt)
+
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil, elapsed, errors.New("Fail to get all cars info")
+		return 0, elapsed, err
+		//return nil, elapsed, errors.New("Fail to get all cars info")
 	}
 
-	cnt := 0
+	/*cnt := 0
 	for rows.Next() {
 		carInfo := &dataMySQL.Car{}
 		cnt++
@@ -56,6 +61,7 @@ func (r *CarsDAO) GetAllCarsInfo() ([]*dataMySQL.Car, float64, error) {
 	}
 
 	defer rows.Close()
-
-	return cars, elapsed, nil
+	*/
+	return cnt, elapsed, nil
+	//return cars, elapsed, nil
 }

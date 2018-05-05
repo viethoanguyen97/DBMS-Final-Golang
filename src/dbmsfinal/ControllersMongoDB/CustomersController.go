@@ -25,6 +25,7 @@ func (e *CustomersController) GetCustomerInfo(c *gin.Context) {
 			"status":        http.StatusNotFound,
 			"message":       err.Error(),
 			"data":          nil,
+			"rows":          0,
 			"duration_time": duration,
 		})
 		return
@@ -34,18 +35,21 @@ func (e *CustomersController) GetCustomerInfo(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "Get customer's info successfully",
 		"data":     customerInfo,
+		"rows":     1,
 		"duration": duration,
 	})
 }
 
 func (e *CustomersController) GetAllCustomersInfo(c *gin.Context) {
-	_, duration, err := customersDAO.GetAllCustomersInfo()
-
+	//_, duration, err := customersDAO.GetAllCustomersInfo()
+	rows, duration, err := customersDAO.GetAllCustomersInfo()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"rows":     rows,
+			"duration": duration,
 			//"data":    nil,
 		})
 		return
@@ -55,114 +59,7 @@ func (e *CustomersController) GetAllCustomersInfo(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Get all Customers info successfully",
 		//"data":     customers,
+		"rows":     rows,
 		"duration": duration,
 	})
 }
-
-/*
-func (r *CustomersController) AddNewCustomer(c *gin.Context) {
-	addCustomerData := &dataService.AddCustomer{}
-	err := c.BindJSON(addCustomerData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
-
-	CustomerInfo, err := CustomersdaoMongoDBAddNewCustomer(addCustomerData)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
-		})
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Add new Customer successfully!",
-		"data":    CustomerInfo,
-	})
-}
-
-func (r *CustomersController) EditCustomer(c *gin.Context) { //TODO: edit Customer with optional field
-	CustomerID, _ := strconv.ParseInt(c.Param("Customer_id"), 10, 64)
-
-	editCustomerData := &dataService.EditCustomer{}
-	err := c.BindJSON(editCustomerData)
-	if err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
-
-	CustomerInfo, err := CustomersdaoMongoDBEditCustomer(CustomerID, editCustomerData)
-
-	if err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Edit Customer's info successfully",
-		"data":    CustomerInfo,
-	})
-	return
-}
-
-func (r *CustomersController) BorrowCustomer(c *gin.Context) {
-	CustomerID, _ := strconv.ParseInt(c.Param("Customer_id"), 10, 64)
-
-	CustomerInfo, err := CustomersdaoMongoDBBorrowCustomer(CustomerID)
-
-	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{
-			"status":  http.StatusForbidden,
-			"message": err.Error(),
-			"data":    nil,
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Borrow Customer successfully",
-		"data":    CustomerInfo,
-	})
-
-	return
-}
-
-func (r *CustomersController) DeleteCustomer(c *gin.Context) {
-	CustomerID, _ := strconv.ParseInt(c.Param("Customer_id"), 10, 64)
-
-	err := CustomersdaoMongoDBDeleteCustomer(CustomerID)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Delete Customer successfully",
-	})
-}
-*/

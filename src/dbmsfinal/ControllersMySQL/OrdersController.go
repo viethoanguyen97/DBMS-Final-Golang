@@ -26,6 +26,7 @@ func (e *OrdersController) GetOrderInfo(c *gin.Context) {
 			"status":        http.StatusNotFound,
 			"message":       err.Error(),
 			"data":          nil,
+			"rows":          0,
 			"duration_time": duration,
 		})
 		return
@@ -35,19 +36,22 @@ func (e *OrdersController) GetOrderInfo(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "Get Order's info successfully",
 		"data":     OrderInfo,
+		"rows":     1,
 		"duration": duration,
 	})
 }
 
 func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
-	_, duration, err := OrdersDAO.GetAllOrdersInfo()
-
+	//_, duration, err := OrdersDAO.GetAllOrdersInfo()
+	rows, duration, err := OrdersDAO.GetAllOrdersInfo()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": err.Error(),
-			"data":    nil,
+			//"data":    nil,
+			"rows":     0,
+			"duration": duration,
 		})
 		return
 	}
@@ -56,12 +60,13 @@ func (e *OrdersController) GetAllOrdersInfo(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Get all Orders info successfully",
 		//"data":     Orders,
+		"rows":     rows,
 		"duration": duration,
 	})
 }
 
 func (r *OrdersController) EditOrder(c *gin.Context) { //TODO: edit Order with optional field
-	orderID, _ := strconv.ParseInt(c.Param("Order_id"), 10, 64)
+	orderID, _ := strconv.ParseInt(c.Param("order_id"), 10, 64)
 
 	editOrderData := &dataMySQL.Order{}
 	err := c.BindJSON(editOrderData)
@@ -70,6 +75,7 @@ func (r *OrdersController) EditOrder(c *gin.Context) { //TODO: edit Order with o
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": err.Error(),
+			"rows":    0,
 			"data":    nil,
 		})
 		return
@@ -83,6 +89,7 @@ func (r *OrdersController) EditOrder(c *gin.Context) { //TODO: edit Order with o
 			"status":   http.StatusInternalServerError,
 			"message":  err.Error(),
 			"data":     nil,
+			"rows":     0,
 			"duration": duration,
 		})
 		return
@@ -92,6 +99,7 @@ func (r *OrdersController) EditOrder(c *gin.Context) { //TODO: edit Order with o
 		"status":   http.StatusOK,
 		"message":  "Edit Order's info successfully",
 		"data":     OrderInfo,
+		"rows":     1,
 		"duration": duration,
 	})
 	return

@@ -1,14 +1,13 @@
 package queryMongo
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestGetOrderInfo(t *testing.T) {
-	order, duration, _ := (*OrdersDAO)(nil).GetOrderInfo(150)
+	/*order, duration, _ := (*OrdersDAO)(nil).GetOrderInfo(150)
 	fmt.Println(order)
-	fmt.Println(duration)
+	fmt.Println(duration)*/
 }
 
 func TestGetAllOrders(t *testing.T) {
