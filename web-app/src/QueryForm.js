@@ -16,6 +16,7 @@ export default class Navigation extends Component {
       insertCarIdField: 0,
       insertQuantityOrderField: 0,
       carIdField: 0,
+      updateCustomerIdField: 0,
       durationTime: 0,
       rows: 0,
       durationTimeFadeIn: false
@@ -72,6 +73,7 @@ export default class Navigation extends Component {
         break;
       case 10:
         uri += ("/orders/" + this.state.idField);
+        body['customer_id'] = this.state.updateCustomerIdField;
         break;
       default:
         uri += ("/orders/" + this.state.idField + "?car_id=" + this.state.carIdField);
@@ -89,9 +91,7 @@ export default class Navigation extends Component {
     if (methodsSet[this.state.queryType] === "POST") {
       options["body"] = JSON.stringify(body);
     } else if (methodsSet[this.state.queryType] === "PUT") {
-      options["body"] = JSON.stringify({
-        "customer_id": 3000
-      });
+      options["body"] = JSON.stringify(body);
     }
     console.log(options);
     fetch(uri, options)
@@ -170,6 +170,15 @@ export default class Navigation extends Component {
       </FormGroup>
       : <div></div>
 
+    let updateCustomerIdField = (this.state.queryType === 10)
+      ? <FormGroup row>
+        <Label sm={3} for="updateCustomerIdField">ID Khách hàng cần sửa</Label>
+        <Col sm={9}>
+          <Input type="number" name="updateCustomerIdField" id="updateCustomerIdField" onChange={this.onChangeIdField} value={this.state.updateCustomerIdField} />
+        </Col>
+      </FormGroup>
+      : <div></div>
+
     let insertField = (this.state.queryType === 9)
       ? <div>
         <FormGroup row>
@@ -220,6 +229,7 @@ export default class Navigation extends Component {
               </FormGroup>
 
               {idField}
+              {updateCustomerIdField}
               {carIdField}
               {insertField}
 
