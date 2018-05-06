@@ -23,7 +23,7 @@ func init() {
 		panic("failed to connect database")
 	}
 
-	fmt.Println("Connect database succesfully")
+	fmt.Println("Connect database MySQL successfully")
 }
 
 func CloseDB() {

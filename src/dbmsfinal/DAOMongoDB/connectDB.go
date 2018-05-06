@@ -28,8 +28,74 @@ func init() {
 	}
 	//defer session.Close()
 
-	fmt.Println("Connect database successfully")
+	fmt.Println("Connect database MongoDB successfully")
 
+}
+
+func EnsureIndex() {
+	session := Session.Copy()
+	defer session.Close()
+
+	c := session.DB("DBMSFinal").C("Cars")
+
+	index := mgo.Index{
+		Key:        []string{"car_id"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err := c.EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+
+	c = session.DB("DBMSFinal").C("Customers")
+
+	index = mgo.Index{
+		Key:        []string{"customer_id"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err = c.EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+
+	c = session.DB("DBMSFinal").C("Orders")
+
+	index = mgo.Index{
+		Key:        []string{"order_id"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err = c.EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+
+	c = session.DB("DBMSFinal").C("Orderdetails")
+
+	/*	index = mgo.Index{
+			Key:        []string{"order_id", "car_id"},
+			Unique:     true,
+			DropDups:   true,
+			Background: true,
+			Sparse:     true,
+		}
+
+		err = c.EnsureIndex(index)
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
 
 func CloseDB() {

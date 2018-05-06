@@ -26,6 +26,7 @@ func (e *OrderdetailsController) GetOrderdetailsOfOrderID(c *gin.Context) {
 			"status":        http.StatusNotFound,
 			"message":       err.Error(),
 			"data":          nil,
+			"rows":          0, //len(OrderdetailsInfo)
 			"duration_time": duration,
 		})
 		return
@@ -35,6 +36,7 @@ func (e *OrderdetailsController) GetOrderdetailsOfOrderID(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "Get Orderdetails's info successfully",
 		"data":     OrderdetailsInfo,
+		"rows":     len(OrderdetailsInfo),
 		"duration": duration,
 	})
 }
@@ -46,9 +48,11 @@ func (e *OrderdetailsController) GetOrderCardetailsOfOrderID(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"data":     nil,
+			"rows":     0,
+			"duration": duration,
 		})
 		return
 	}
@@ -57,6 +61,7 @@ func (e *OrderdetailsController) GetOrderCardetailsOfOrderID(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "Get all Orderdetails info successfully",
 		"data":     Orderdetails,
+		"rows":     len(Orderdetails),
 		"duration": duration,
 	})
 }
@@ -68,9 +73,11 @@ func (e *OrderdetailsController) GetOrderCardetailsOfCustomerID(c *gin.Context) 
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"data":     nil,
+			"rows":     0,
+			"duration": duration,
 		})
 		return
 	}
@@ -79,6 +86,7 @@ func (e *OrderdetailsController) GetOrderCardetailsOfCustomerID(c *gin.Context) 
 		"status":   http.StatusOK,
 		"message":  "Get all Orderdetails info successfully",
 		"data":     Orderdetails,
+		"rows":     len(Orderdetails),
 		"duration": duration,
 	})
 }
@@ -88,9 +96,11 @@ func (r *OrderdetailsController) InsertNewOrderdetail(c *gin.Context) {
 	err := c.BindJSON(insertOrderdetailsData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": err.Error(),
-			"data":    nil,
+			"status":   http.StatusInternalServerError,
+			"message":  err.Error(),
+			"data":     nil,
+			"rows":     0,
+			"duration": 0,
 		})
 		return
 	}
@@ -102,6 +112,7 @@ func (r *OrderdetailsController) InsertNewOrderdetail(c *gin.Context) {
 			"status":   http.StatusInternalServerError,
 			"message":  err.Error(),
 			"data":     nil,
+			"rows":     0,
 			"duration": duration,
 		})
 		return
@@ -111,6 +122,7 @@ func (r *OrderdetailsController) InsertNewOrderdetail(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "insert new Orderdetails successfully!",
 		"data":     insertOrderdetailsData,
+		"rows":     1,
 		"duration": duration,
 	})
 }
@@ -126,6 +138,7 @@ func (r *OrderdetailsController) DeleteOrderdetails(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":   http.StatusInternalServerError,
 			"message":  err.Error(),
+			"rows":     0,
 			"duration": duration,
 		})
 		return
@@ -134,6 +147,7 @@ func (r *OrderdetailsController) DeleteOrderdetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":   http.StatusOK,
 		"message":  "Delete Orderdetails successfully",
+		"rows":     1,
 		"duration": duration,
 	})
 }

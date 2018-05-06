@@ -12,7 +12,11 @@ import (
 
 type OrdersDAO struct{}
 
-func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMongoDB.Order, int64, error) {
+type Count struct {
+	Count int64 `bson:"count" json:"count"`
+}
+
+func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMongoDB.Order, float64, error) {
 	orderInfo := &dataMongoDB.Order{}
 
 	//Measure time execution
@@ -21,7 +25,7 @@ func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMongoDB.Order, int64, err
 
 	//Measure time execution
 	err := query.One(orderInfo)
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, elapsed, errors.New("Fail to get order info")
@@ -30,26 +34,46 @@ func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMongoDB.Order, int64, err
 	return orderInfo, elapsed, nil
 }
 
-func (r *OrdersDAO) GetAllOrdersInfo() ([]*dataMongoDB.Order, int64, error) {
-	orders := make([]*dataMongoDB.Order, 0)
+func (r *OrdersDAO) GetAllOrdersInfo() (int64, float64, error) { // ([]*dataMongoDB.Order, int64, error) {
+	//orders := make([]*dataMongoDB.Order, 0)
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMSFinal").C("Orders").Find(bson.M{})
-	elapsed := time.Since(start).Nanoseconds()
-	//Measure time execution
+	//query := Session.DB("DBMSFinal").C("Orders").Find(bson.M{})
 
-	err := query.All(&orders)
+	//Measure time execution
+	//err := query.All(&orders)
+	//cnt, err := query.Count()
+	//db.orderdetails.aggregate([{ $group: { _id: null, count: { $sum: 1 } } }])
+	collection := Session.DB("DBMSFinal").C("Orders")
+	pipeline := []bson.M{
+		bson.M{"$group": bson.M{
+			"_id": bson.M{},
+			"count": bson.M{
+				"$sum": 1,
+			},
+		},
+		},
+	}
+
+	count := &Count{}
+	pipe := collection.Pipe(pipeline)
+	err := pipe.One(count)
+
+	fmt.Println(count)
+	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil, elapsed, errors.New("Fail to get all orders info")
+		//return nil, elapsed, errors.New("Fail to get all orders info")
+		return 0, elapsed, err
 	}
 
-	return orders, elapsed, nil
+	return count.Count, elapsed, nil //int64(cnt), elapsed, nil
+	//return orders, elapsed, nil
 }
 
-func (r *OrdersDAO) EditOrder(order_id int64, editOrderData *dataMongoDB.Order) (*dataMongoDB.Order, int64, error) {
+func (r *OrdersDAO) EditOrder(order_id int64, editOrderData *dataMongoDB.Order) (*dataMongoDB.Order, float64, error) {
 	customer_id := editOrderData.CustomerID
 
 	start := time.Now()
@@ -63,7 +87,7 @@ func (r *OrdersDAO) EditOrder(order_id int64, editOrderData *dataMongoDB.Order) 
 		},
 	)
 
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 
 	editOrderData.OrderID = order_id
 

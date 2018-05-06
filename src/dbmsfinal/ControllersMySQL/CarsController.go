@@ -25,6 +25,7 @@ func (e *CarsController) GetCarInfo(c *gin.Context) {
 			"status":        http.StatusNotFound,
 			"message":       err.Error(),
 			"data":          nil,
+			"rows":          0,
 			"duration_time": duration,
 		})
 		return
@@ -34,27 +35,31 @@ func (e *CarsController) GetCarInfo(c *gin.Context) {
 		"status":   http.StatusOK,
 		"message":  "Get Car's info successfully",
 		"data":     CarInfo,
+		"rows":     1,
 		"duration": duration,
 	})
 }
 
 func (e *CarsController) GetAllCarsInfo(c *gin.Context) {
-	Cars, duration, err := CarsDAO.GetAllCarsInfo()
-
+	//_, duration, err := CarsDAO.GetAllCarsInfo()
+	rows, duration, err := CarsDAO.GetAllCarsInfo()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": err.Error(),
-			"data":    nil,
+			//"data":    nil,
+			"rows":     0,
+			"duration": duration,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"message":  "Get all Cars info successfully",
-		"data":     Cars,
+		"status":  http.StatusOK,
+		"message": "Get all Cars info successfully",
+		//"data":     Cars,
+		"rows":     rows,
 		"duration": duration,
 	})
 }

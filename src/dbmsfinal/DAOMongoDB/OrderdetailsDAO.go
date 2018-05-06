@@ -12,7 +12,7 @@ import (
 
 type OrderDetailsDAO struct{}
 
-func (r *OrderDetailsDAO) GetOrderdetailsOfOrderID(order_id int64) ([]*dataMongoDB.OrderDetail, int64, error) {
+func (r *OrderDetailsDAO) GetOrderdetailsOfOrderID(order_id int64) ([]*dataMongoDB.OrderDetail, float64, error) {
 	/*db.Orders.aggregate([
 	    {$match: {order_id: 150}},
 	  	{$lookup: {
@@ -97,7 +97,7 @@ func (r *OrderDetailsDAO) GetOrderdetailsOfOrderID(order_id int64) ([]*dataMongo
 
 	err := pipe.All(&orderdetails)
 
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, elapsed, errors.New("Fail to get orderdetails of order")
@@ -106,7 +106,7 @@ func (r *OrderDetailsDAO) GetOrderdetailsOfOrderID(order_id int64) ([]*dataMongo
 	return orderdetails, elapsed, nil
 }
 
-func (r *OrderDetailsDAO) GetOrderCardetailsOfOrderID(order_id int64) ([]*dataMongoDB.OrderCarDetail, int64, error) {
+func (r *OrderDetailsDAO) GetOrderCardetailsOfOrderID(order_id int64) ([]*dataMongoDB.OrderCarDetail, float64, error) {
 	/*db.Orders.aggregate([
 	    {$match: {order_id: 150}},
 
@@ -228,9 +228,9 @@ func (r *OrderDetailsDAO) GetOrderCardetailsOfOrderID(order_id int64) ([]*dataMo
 	}
 	pipe := collection.Pipe(pipeline)
 
-	fmt.Println(time.Since(start).Nanoseconds())
+	fmt.Println(time.Since(start).Seconds())
 	err := pipe.All(&ordercardetails)
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -240,7 +240,7 @@ func (r *OrderDetailsDAO) GetOrderCardetailsOfOrderID(order_id int64) ([]*dataMo
 	return ordercardetails, elapsed, nil
 }
 
-func (r *OrderDetailsDAO) GetOrderCardetailsOfCustomerID(customer_id int64) ([]*dataMongoDB.OrderCarDetail, int64, error) {
+func (r *OrderDetailsDAO) GetOrderCardetailsOfCustomerID(customer_id int64) ([]*dataMongoDB.OrderCarDetail, float64, error) {
 	/*db.Orders.aggregate([
 	  {$match: {customer_id: 150}},
 
@@ -361,9 +361,9 @@ func (r *OrderDetailsDAO) GetOrderCardetailsOfCustomerID(customer_id int64) ([]*
 		},
 	}
 	pipe := collection.Pipe(pipeline)
-	fmt.Println(time.Since(start).Nanoseconds())
+	fmt.Println(time.Since(start).Seconds())
 	err := pipe.All(&ordercardetails)
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -373,13 +373,13 @@ func (r *OrderDetailsDAO) GetOrderCardetailsOfCustomerID(customer_id int64) ([]*
 	return ordercardetails, elapsed, nil
 }
 
-func (*OrderDetailsDAO) InsertNewOrderdetail(insertNewOrderdetailData *dataMongoDB.OrderdetailCSV) (*dataMongoDB.OrderdetailCSV, int64, error) {
+func (*OrderDetailsDAO) InsertNewOrderdetail(insertNewOrderdetailData *dataMongoDB.OrderdetailCSV) (*dataMongoDB.OrderdetailCSV, float64, error) {
 	insertNewOrderdetailData.ID = bson.NewObjectId()
 	start := time.Now()
 
 	err := Session.DB("DBMSFinal").C("Orderdetails").Insert(insertNewOrderdetailData)
 
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
 		panic(err)
@@ -389,7 +389,7 @@ func (*OrderDetailsDAO) InsertNewOrderdetail(insertNewOrderdetailData *dataMongo
 	return insertNewOrderdetailData, elapsed, nil
 }
 
-func (*OrderDetailsDAO) DeleteOrderdetail(order_id int64, car_id int64) (int64, error) {
+func (*OrderDetailsDAO) DeleteOrderdetail(order_id int64, car_id int64) (float64, error) {
 	start := time.Now()
 
 	err := Session.DB("DBMSFinal").C("Orderdetails").Remove(
@@ -399,7 +399,7 @@ func (*OrderDetailsDAO) DeleteOrderdetail(order_id int64, car_id int64) (int64, 
 		},
 	)
 
-	elapsed := time.Since(start).Nanoseconds()
+	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
 		panic(err)

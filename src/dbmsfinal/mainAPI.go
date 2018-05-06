@@ -42,6 +42,8 @@ func main() {
 	MongoDBOrdersController := &controllersMongoDB.OrdersController{}
 	MongoDBOrderdetailsController := &controllersMongoDB.OrderdetailsController{}
 
+	daoMongoDB.EnsureIndex()
+
 	v1 := router.Group("/api/mysql")
 	{
 		v1.GET("/customers/", MySQLCustomersController.GetAllCustomersInfo)
