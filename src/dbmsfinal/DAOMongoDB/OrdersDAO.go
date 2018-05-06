@@ -12,6 +12,10 @@ import (
 
 type OrdersDAO struct{}
 
+type Count struct {
+	Count int64 `bson:"count" json:"count"`
+}
+
 func (r *OrdersDAO) GetOrderInfo(order_id int64) (*dataMongoDB.Order, float64, error) {
 	orderInfo := &dataMongoDB.Order{}
 
@@ -35,11 +39,28 @@ func (r *OrdersDAO) GetAllOrdersInfo() (int64, float64, error) { // ([]*dataMong
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMSFinal").C("Orders").Find(bson.M{})
+	//query := Session.DB("DBMSFinal").C("Orders").Find(bson.M{})
 
 	//Measure time execution
 	//err := query.All(&orders)
-	cnt, err := query.Count()
+	//cnt, err := query.Count()
+	//db.orderdetails.aggregate([{ $group: { _id: null, count: { $sum: 1 } } }])
+	collection := Session.DB("DBMSFinal").C("Orders")
+	pipeline := []bson.M{
+		bson.M{"$group": bson.M{
+			"_id": bson.M{},
+			"count": bson.M{
+				"$sum": 1,
+			},
+		},
+		},
+	}
+
+	count := &Count{}
+	pipe := collection.Pipe(pipeline)
+	err := pipe.One(count)
+
+	fmt.Println(count)
 	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
@@ -48,7 +69,7 @@ func (r *OrdersDAO) GetAllOrdersInfo() (int64, float64, error) { // ([]*dataMong
 		return 0, elapsed, err
 	}
 
-	return int64(cnt), elapsed, nil
+	return count.Count, elapsed, nil //int64(cnt), elapsed, nil
 	//return orders, elapsed, nil
 }
 

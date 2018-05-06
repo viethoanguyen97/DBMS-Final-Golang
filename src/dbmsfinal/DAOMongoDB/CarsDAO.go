@@ -30,17 +30,32 @@ func (r *CarsDAO) GetCarInfo(car_id int64) (*dataMongoDB.Car, float64, error) {
 	return carInfo, elapsed, nil
 }
 
-func (r *CarsDAO) GetAllCarsInfo() (int, float64, error) { //([]*dataMongoDB.Car, int64, error) {
+func (r *CarsDAO) GetAllCarsInfo() (int64, float64, error) { //([]*dataMongoDB.Car, int64, error) {
 	//cars := make([]*dataMongoDB.Car, 0)
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMSFinal").C("Cars").Find(bson.M{})
+	//	query := Session.DB("DBMSFinal").C("Cars").Find(bson.M{})
 
 	//Measure time execution
 
 	//	err := query.All(&cars)
-	cnt, err := query.Count()
+	//cnt, err := query.Count()
+	collection := Session.DB("DBMSFinal").C("Cars")
+	pipeline := []bson.M{
+		bson.M{"$group": bson.M{
+			"_id": bson.M{},
+			"count": bson.M{
+				"$sum": 1,
+			},
+		},
+		},
+	}
+
+	count := &Count{}
+	pipe := collection.Pipe(pipeline)
+	err := pipe.One(count)
+
 	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
@@ -49,6 +64,6 @@ func (r *CarsDAO) GetAllCarsInfo() (int, float64, error) { //([]*dataMongoDB.Car
 		//return nil, elapsed, errors.New("Fail to get all cars info")
 	}
 
-	return cnt, elapsed, nil
+	return count.Count, elapsed, nil
 	//	return cars, elapsed, nil
 }

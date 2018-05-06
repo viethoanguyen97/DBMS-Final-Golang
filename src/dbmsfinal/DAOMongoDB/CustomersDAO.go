@@ -30,16 +30,30 @@ func (r *CustomersDAO) GetCustomerInfo(customer_id int64) (*dataMongoDB.Customer
 	return customerInfo, elapsed, nil
 }
 
-func (r *CustomersDAO) GetAllCustomersInfo() (int, float64, error) { //([]*dataMongoDB.Customer, float64, error) {
+func (r *CustomersDAO) GetAllCustomersInfo() (int64, float64, error) { //([]*dataMongoDB.Customer, float64, error) {
 	//customers := make([]*dataMongoDB.Customer, 0)
 
 	//Measure time execution
 	start := time.Now()
-	query := Session.DB("DBMSFinal").C("Customers").Find(bson.M{})
+	//query := Session.DB("DBMSFinal").C("Customers").Find(bson.M{})
 	//Measure time execution
 
 	//	err := query.All(&customers)
-	cnt, err := query.Count()
+	collection := Session.DB("DBMSFinal").C("Customers")
+	pipeline := []bson.M{
+		bson.M{"$group": bson.M{
+			"_id": bson.M{},
+			"count": bson.M{
+				"$sum": 1,
+			},
+		},
+		},
+	}
+
+	count := &Count{}
+	pipe := collection.Pipe(pipeline)
+	err := pipe.One(count)
+	//cnt, err := query.Count()
 	elapsed := time.Since(start).Seconds()
 
 	if err != nil {
@@ -48,6 +62,6 @@ func (r *CustomersDAO) GetAllCustomersInfo() (int, float64, error) { //([]*dataM
 		//return nil, elapsed, errors.New("Fail to get all customers info")
 	}
 
-	return cnt, elapsed, nil
+	return count.Count, elapsed, nil
 	//	return customers, elapsed, nil
 }
